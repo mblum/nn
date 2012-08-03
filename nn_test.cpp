@@ -123,7 +123,7 @@ TEST(nn, readwrite) {
 }
 
 TEST(nn, testfunction) {
-  srand(time(NULL));
+  srand((unsigned int) time(NULL));
   Eigen::VectorXi topo(4);
   topo << 2, 10, 10, 1;
   NeuralNet nn(topo);
