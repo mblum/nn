@@ -10,17 +10,23 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
 SET(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR} CACHE INTERNAL "Prefix prepended to install directories" FORCE)
 
 FIND_PACKAGE(Eigen3 REQUIRED)
-FIND_PACKAGE(GTest)
 
 INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
 
 ADD_LIBRARY(nn nn.cpp)
 
 # ----- Testing -----
-IF (GTEST_FOUND)
-  ENABLE_TESTING()
-  INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIR})
-  ADD_EXECUTABLE(nn_test nn_test.cpp)
-  TARGET_LINK_LIBRARIES(nn_test nn ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-  ADD_TEST(nn_test ${CMAKE_CURRENT_BINARY_DIR}/nn_test)
-ENDIF ()
+INCLUDE(ExternalProject)
+
+# ----- Download and build gtest -----
+ExternalProject_Add(googletest
+  SVN_REPOSITORY "http://googletest.googlecode.com/svn/tags/release-1.6.0"
+  INSTALL_COMMAND ""
+)
+
+INCLUDE_DIRECTORIES (${CMAKE_CURRENT_BINARY_DIR}/googletest-prefix/src/googletest/include)
+LINK_DIRECTORIES (${CMAKE_CURRENT_BINARY_DIR}/googletest-prefix/src/googletest-build)
+
+ADD_EXECUTABLE(nn_test nn_test.cpp)
+TARGET_LINK_LIBRARIES(nn_test nn gtest gtest_main)
+

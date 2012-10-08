@@ -5,7 +5,7 @@
 //  Copyright (c) 2012 Uni Freiburg. All rights reserved.
 //
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 #include <gtest/gtest.h>
 
 #include "nn.h"

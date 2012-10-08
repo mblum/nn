@@ -8,7 +8,7 @@
 #ifndef xperitor_nn_h
 #define xperitor_nn_h
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
 #include <vector>
 
 typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix_t;
