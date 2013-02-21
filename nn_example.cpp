@@ -7,6 +7,7 @@
 
 #include <Eigen/Dense>
 #include <iostream>
+#include <cstdio>
 
 #include "nn.h"
 
