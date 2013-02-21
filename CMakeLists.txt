@@ -30,3 +30,6 @@ LINK_DIRECTORIES (${CMAKE_CURRENT_BINARY_DIR}/googletest-prefix/src/googletest-b
 ADD_EXECUTABLE(nn_test nn_test.cpp)
 TARGET_LINK_LIBRARIES(nn_test nn gtest gtest_main)
 
+ADD_EXECUTABLE(nn_example nn_example.cpp)
+TARGET_LINK_LIBRARIES(nn_example nn)
+

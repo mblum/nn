@@ -13,6 +13,7 @@ nn was tested on Ubuntu Linux and MacOS
 * clone the nn repository or download it [here](https://bitbucket.org/mblum/nn/get/master.tar.gz)
 * change to the nn directory and create a build folder 
   
+          cd path/to/nn
           mkdir build
 
 * run cmake from within the build folder and compile the library using make
@@ -20,6 +21,10 @@ nn was tested on Ubuntu Linux and MacOS
           cd build
           cmake ..
           make
+
+* run the example code
+
+          ./nn_example
 
 * if cmake was able to download [googletest](http://code.google.com/p/googletest/) you can run unit tests now
     
@@ -39,7 +44,7 @@ Organize your training data into a *(m x n_input)* matrix containing the trainin
 
 ### Initializing the neural network
 
-This neural network implementation only supports fully connected feed forward networks. The neurons are organized into *k* layers. There is at least one input layer and one output layer and an arbitrary number of hidden layers. Each neuron has outgoing connections to all neurons in the subsequent layer. The number of neurons in the input and the output layer is given by the dimensionality of the training data. After specifying the network topology you can initialize the neural network with random weights.
+This neural network implementation only supports fully connected feed forward networks. The neurons are organized into *k* layers. There is at least one input layer and one output layer and an arbitrary number of hidden layers. Each neuron has outgoing connections to all neurons in the subsequent layer. The number of neurons in the input and the output layer is given by the dimensionality of the training data. After specifying the network topology you can create the neural network.The weights will be initialized randomly.
 
           Eigen::VectorXi topo(k);
           topo << n_input, n1, n2, ..., n_output;
@@ -49,7 +54,7 @@ This neural network implementation only supports fully connected feed forward ne
 
 ### Training the network
 
-Alternate between computing the quadratic loss of the neural network model and adapting the parameters until the loss converges. 
+Alternate between computing the quadratic loss of the neural network model and adapting the parameters until the loss converges. You can also specify a regularization parameter *lambda*, which adds an additional error for large weights and thereby avoiding overfitting.
 
           for (int i = 0; i < max_steps; ++i) {
             err = nn.loss(X, Y, lambda);
@@ -73,4 +78,7 @@ You can read and write neural network model to textfiles.
           // read model from disk
           NeuralNet nn(filename);
 
+### Scaling the data
+
+### Changing the floating number precision
 
