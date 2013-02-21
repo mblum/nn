@@ -46,7 +46,7 @@ TEST(nn, sigmoid_gradient2) {
   for (int i=0; i<X.rows(); ++i) {
     for (int j=0; j<X.cols(); ++j) {
       double sigmoid = 1/(1+exp(-X(i,j)));
-      ASSERT_NEAR(Y(i,j), sigmoid*(1-sigmoid), 1e-7);
+      ASSERT_NEAR(Y(i,j), sigmoid*(1-sigmoid), 1e-9);
     }
   }
 }
@@ -109,11 +109,11 @@ TEST(nn, readwrite) {
   for (int i=1; i<nn.layer.size(); ++i) {
     for (int j=0; j<nn.layer[i].W.rows(); ++j) {
       for (int k=0; k<nn.layer[i].W.cols(); ++k) {
-        ASSERT_NEAR(nn.layer[i].W(j,k), nnclone.layer[i].W(j,k), 1e-6);
+        ASSERT_NEAR(nn.layer[i].W(j,k), nnclone.layer[i].W(j,k), 1e-12);
       }
     }
     for (int j=0; j<nn.layer[i].b.rows(); ++j) {
-      ASSERT_NEAR(nn.layer[i].b(j), nnclone.layer[i].b(j), 1e-6);
+      ASSERT_NEAR(nn.layer[i].b(j), nnclone.layer[i].b(j), 1e-12);
     }
   }
 }
@@ -123,8 +123,8 @@ TEST(nn, testfunction) {
   Eigen::VectorXi topo(4);
   topo << 2, 10, 10, 1;
   NeuralNet nn(topo);
-  matrix_t X = matrix_t::Random(2000,2);
-  matrix_t Y = matrix_t::Random(2000,1);
+  matrix_t X = matrix_t::Random(1000,2);
+  matrix_t Y = matrix_t::Random(1000,1);
   for (int i=0;i<X.rows(); ++i) {
     Y(i,0) = (X(i,0) * X(i,1) + 1.2)*0.4;
   }
@@ -136,5 +136,5 @@ TEST(nn, testfunction) {
   ASSERT_LE(err, 0.001);
   nn.write("/tmp/nn.txt");
   NeuralNet nnclone("/tmp/nn.txt");
-  ASSERT_NEAR(nn.loss(X, Y, lambda), nnclone.loss(X, Y, lambda), 1e-8);
+  ASSERT_NEAR(nn.loss(X, Y, lambda), nnclone.loss(X, Y, lambda), 1e-12);
 }
