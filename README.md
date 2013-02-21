@@ -34,7 +34,7 @@ nn was tested on Ubuntu Linux, Arch Linux and MacOS
 License
 -------
 
-nn is free software, licensed under the BSD license. A copy of the license is distributed with the software. See 
+nn is free software, licensed under the BSD license. A copy of this license is distributed with the software.  
 
 Usage of the library
 --------------------
