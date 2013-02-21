@@ -1,9 +1,5 @@
-//
-//  nn.cpp
-//
-//  Created by Manuel Blum on 02.07.12.
-//  Copyright (c) 2012 Uni Freiburg. All rights reserved.
-//
+// Copyright (c) 2013, Manuel Blum
+// All rights reserved.
 
 #include <iostream>
 #include <fstream>
@@ -67,12 +63,12 @@ void NeuralNet::init_layer(Eigen::VectorXi &topology) {
   }  
 }
 
-void NeuralNet::init_weights(F_TYPE range) {
+void NeuralNet::init_weights(F_TYPE sd) {
   for (int i=1; i<layer.size(); ++i) {
     layer[i].W.setRandom();
     layer[i].b.setRandom();
-    layer[i].W *= range;
-    layer[i].b *= range;
+    layer[i].W *= sd;
+    layer[i].b *= sd;
   }
 }
 
@@ -204,6 +200,8 @@ bool NeuralNet::write(const char *filename) {
       fs.write((char *) layer[i].W.data(), layer[i].W.rows() * layer[i].W.cols() * sizeof(F_TYPE));
       fs.write((char *) layer[i].b.data(), layer[i].b.size() * sizeof(F_TYPE));
     }
+  } else {
+    return false;
   }
   fs.close();
   return true;

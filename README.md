@@ -1,7 +1,7 @@
 Multi-layer perceptrons using RPROP
 ===================================
 
-nn is a lightweight neural network library using resilient propagation for training the weights
+nn is a lightweight neural network library using resilient propagation for adapting the weights
 
 Installation
 ------------
@@ -30,8 +30,16 @@ nn was tested on Ubuntu Linux, Arch Linux and MacOS
     
           ./nn_test
 
+
+License
+-------
+
+nn is free software, licensed under the BSD license. A copy of the license is distributed with the software. See 
+
 Usage of the library
 --------------------
+
+The source code for this tutorial can be found in `nn_example.cpp`.
 
 ### Preparing your data
 

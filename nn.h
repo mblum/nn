@@ -1,9 +1,5 @@
-//
-//  nn.h
-//
-//  Created by Manuel Blum on 02.07.12.
-//  Copyright (c) 2012 Uni Freiburg. All rights reserved.
-//
+// Copyright (c) 2013, Manuel Blum
+// All rights reserved.
 
 #ifndef __NN_H__
 #define __NN_H__
@@ -36,8 +32,8 @@ public:
   NeuralNet(const char * filename);
   /** Destructor. */
   ~NeuralNet();
-  /** Initial weights randomly in range. */
-  void init_weights(F_TYPE range);
+  /** Initial weights randomly (zero mean, standard deviation sd) . */
+  void init_weights(F_TYPE sd);
   /** Compute the loss function and its gradient. 
    *  Rows of X are instances, columns are features. 
    *  Lambda is a regularization parameter penalizing large weights. */

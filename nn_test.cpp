@@ -1,9 +1,5 @@
-//
-//  nn_test.cpp
-//
-//  Created by Manuel Blum on 02.07.12.
-//  Copyright (c) 2012 Uni Freiburg. All rights reserved.
-//
+// Copyright (c) 2013, Manuel Blum
+// All rights reserved.
 
 #include <Eigen/Dense>
 #include <gtest/gtest.h>
