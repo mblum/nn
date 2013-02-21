@@ -35,16 +35,16 @@ Usage of the library
 
 ### Preparing your data
 
-Organize your training data into a *(m x n_input)* matrix containing the training inputs. Each row of this matrix correspods to a training sample and each column corresponds to a feature. Prepare a matrix of size *(m x n_output)* containing the target values, where *n_output* is the number of dimensions of the output. 
+Organize your training data into a *(m x n_input)* matrix containing the training inputs. Each row of this matrix corresponds to a training sample and each column to a feature. Prepare a matrix of size *(m x n_output)* containing the target values, where *n_output* is the number of dimensions of the output. 
 
           matrix_t X(m, n_input);
           matrix_t Y(m, n_output);
 
-          // fill with data
+          // fill here with data
 
 ### Initializing the neural network
 
-This neural network implementation only supports fully connected feed forward networks. The neurons are organized into *k* layers. There is at least one input layer and one output layer and an arbitrary number of hidden layers. Each neuron has outgoing connections to all neurons in the subsequent layer. The number of neurons in the input and the output layer is given by the dimensionality of the training data. After specifying the network topology you can create the neural network.The weights will be initialized randomly.
+This neural network implementation only supports fully connected feed forward networks. The neurons are organized into *k* layers. There is at least one input layer, one output layer and an arbitrary number of hidden layers. Each neuron has outgoing connections to all neurons in the subsequent layer. The number of neurons in the input and the output layer is given by the dimensionality of the training data. After specifying the network topology you can create the neural network. The weights will be initialized randomly.
 
           Eigen::VectorXi topo(k);
           topo << n_input, n1, n2, ..., n_output;
@@ -54,7 +54,7 @@ This neural network implementation only supports fully connected feed forward ne
 
 ### Training the network
 
-Alternate between computing the quadratic loss of the neural network model and adapting the parameters until the loss converges. You can also specify a regularization parameter *lambda*, which adds an additional error for large weights and thereby avoiding overfitting.
+Alternate between computing the quadratic loss of the neural network model and adapting the parameters until the loss converges. You can also specify a regularization parameter *lambda*, which adds an additional error for large weights and thereby avoids overfitting.
 
           for (int i = 0; i < max_steps; ++i) {
             err = nn.loss(X, Y, lambda);
@@ -63,14 +63,14 @@ Alternate between computing the quadratic loss of the neural network model and a
 
 ### Making predictions
 
-If you trained a model using training data, you normally want to use this model for predicting new data. With neural networks you would use the forward pass for this. Afterwards the network output can be read from the activation of the output layer. 
+If you trained a model using training data, you normally want to use this model for making predictions on new data. With neural networks you would use the forward pass for this. Afterwards the network output can be read from the activation of the output layer. 
 
           nn.forward_pass(X_test);
           matrix_t Y_test = nn.layer.back().a;
 
 ### Reading and writing models to disk
 
-You can read and write neural network model to textfiles.
+You can read and write neural network models to textfiles.
 
           // write model to disk
           nn.write(filename);

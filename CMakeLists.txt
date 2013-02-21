@@ -28,7 +28,7 @@ INCLUDE_DIRECTORIES (${CMAKE_CURRENT_BINARY_DIR}/googletest-prefix/src/googletes
 LINK_DIRECTORIES (${CMAKE_CURRENT_BINARY_DIR}/googletest-prefix/src/googletest-build)
 
 ADD_EXECUTABLE(nn_test nn_test.cpp)
-TARGET_LINK_LIBRARIES(nn_test nn gtest gtest_main)
+TARGET_LINK_LIBRARIES(nn_test nn gtest gtest_main pthread)
 
 ADD_EXECUTABLE(nn_example nn_example.cpp)
 TARGET_LINK_LIBRARIES(nn_example nn)
