@@ -214,10 +214,12 @@ void NeuralNet::autoscale(const matrix_t &X, const matrix_t &Y) {
   Xshift = X.colwise().mean();
   // compute the standard deviation of the input data
   Xscale = (X.rowwise()-Xshift.transpose()).array().square().colwise().mean().array().sqrt().inverse();
+  for (size_t i=0; i<Xscale.size(); ++i) if (Xscale(i) > 10e9) Xscale(i) = 1;
   // compute the minimum target values
   Yshift = Y.colwise().minCoeff();
   // compute the maximum shifted target values
   Yscale = (Y.colwise().maxCoeff() - Yshift).array().inverse();
+  for (size_t i=0; i<Yscale.size(); ++i) if (Yscale(i) > 10e9) Yscale(i) = 1;
 }
 
 void NeuralNet::autoscale_reset() {

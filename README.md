@@ -60,9 +60,15 @@ This neural network implementation only supports fully connected feed forward ne
           // initialize a neural network with given topology
           NeuralNet nn(topo);
 
+### Scaling the data
+
+When working with neural networks you should always scale your data, such that all the features are in the same range and the output values are between 0 and 1. You can do this by passing your training data to the autoscale function, which computes the optimal mapping. After calling autoscale this mapping will be performed automatically, so you only have to do this once. 
+
+          nn.autoscale(X,Y);
+
 ### Training the network
 
-Alternate between computing the quadratic loss of the neural network model and adapting the parameters until the loss converges. You can also specify a regularization parameter *lambda*, which adds an additional error for large weights and thereby avoids overfitting.
+Alternate between computing the quadratic loss of the neural network model and adapting the parameters until the loss converges. You can also specify a regularization parameter *lambda*, which punishes large weights and thereby avoids overfitting.
 
           for (int i = 0; i < max_steps; ++i) {
             err = nn.loss(X, Y, lambda);
@@ -71,7 +77,7 @@ Alternate between computing the quadratic loss of the neural network model and a
 
 ### Making predictions
 
-If you trained a model using training data, you normally want to use this model for making predictions on new data. With neural networks you would use the forward pass for this. Afterwards the network output can be read from the activation of the output layer. 
+If you trained a model, you can make predictions on new data by passing it through the network and observe the activation on the output layer. 
 
           nn.forward_pass(X_test);
           matrix_t Y_test = nn.get_activation();
@@ -85,12 +91,6 @@ You can read and write neural network models to binary files.
 
           // read model from disk
           NeuralNet nn(filename);
-
-### Scaling the data
-
-When working with neural networks you should always scale your data, such that all the features are in the same range and the output values are between 0 and 1. You can do this automatically by passing your training data to the autoscale function, which computes the optimal mapping. After calling autoscale this mapping will be performed automatically.
-
-          nn.autoscale(X,Y);
 
 ### Changing the floating number precision
 
