@@ -70,7 +70,7 @@ If you trained a model using training data, you normally want to use this model 
 
 ### Reading and writing models to disk
 
-You can read and write neural network models to textfiles.
+You can read and write neural network models to binary files.
 
           // write model to disk
           nn.write(filename);
@@ -80,7 +80,9 @@ You can read and write neural network models to textfiles.
 
 ### Scaling the data
 
-TODO
+When working with neural networks you should always scale your data, such that all the features are in the same range and the output values are between 0 and 1. You can do this automatically by passing your training data to the autoscale function, which computes the optimal mapping. After calling autoscale this mapping will be performed automatically.
+
+          nn.autoscale(X,Y);
 
 ### Changing the floating number precision
 
