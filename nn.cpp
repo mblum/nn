@@ -22,29 +22,26 @@ NeuralNet::NeuralNet(Eigen::VectorXi &topology) {
 }
 
 NeuralNet::NeuralNet(const char *filename) {
-  std::ifstream fs;
-  fs.open(filename);
-  if (!fs.is_open()) {
-    std::cerr << "could not open " << filename << std::endl;
-    exit(0);
-  }
-  int dim;
-  fs >> dim;
-  Eigen::VectorXi topology(dim);
-  for (int i=0; i<dim; ++i) fs >> topology(i);
-  init_layer(topology);
-  autoscale_reset();
-  for (int i=0; i<layer.front().size; ++i) fs >> Xscale(i);
-  for (int i=0; i<layer.front().size; ++i) fs >> Xshift(i);
-  for (int i=0; i<layer.back().size; ++i) fs >> Yscale(i);
-  for (int i=0; i<layer.back().size; ++i) fs >> Yshift(i);
-  for (int i=1; i<topology.size(); ++i) {
-    for (int j=0; j<layer[i].size; ++j) {
-      for (int k=0; k<layer[i-1].size; ++k) {
-        fs >> layer[i].W(j,k);
-      }
+  std::ifstream fs(filename, std::ios::in | std::ios::binary);
+  if (fs) {
+    // number of layers
+    int num_layers;
+    fs.read((char *)&num_layers, sizeof(int));
+    Eigen::VectorXi topology(num_layers);
+    // topology
+    fs.read((char *) topology.data(), topology.rows() * sizeof(int) );
+    init_layer(topology);
+    autoscale_reset();
+    // scaling parameters
+    fs.read((char *) Xscale.data(), Xscale.size() * sizeof(F_TYPE));
+    fs.read((char *) Xshift.data(), Xshift.size() * sizeof(F_TYPE));
+    fs.read((char *) Yscale.data(), Yscale.size() * sizeof(F_TYPE));
+    fs.read((char *) Yshift.data(), Yshift.size() * sizeof(F_TYPE));
+    // weights
+    for (int i=1; i<layer.size(); ++i) {
+      fs.read((char *) layer[i].W.data(), layer[i].W.rows() * layer[i].W.cols() * sizeof(F_TYPE));
+      fs.read((char *) layer[i].b.data(), layer[i].b.size() * sizeof(F_TYPE));
     }
-    for (int j=0; j<layer[i].size; ++j) fs >> layer[i].b(j);
   }
 }
 
@@ -70,7 +67,7 @@ void NeuralNet::init_layer(Eigen::VectorXi &topology) {
   }  
 }
 
-void NeuralNet::init_weights(double range) {
+void NeuralNet::init_weights(F_TYPE range) {
   for (int i=1; i<layer.size(); ++i) {
     layer[i].W.setRandom();
     layer[i].b.setRandom();
@@ -82,7 +79,7 @@ void NeuralNet::init_weights(double range) {
 NeuralNet::~NeuralNet() {
 }
 
-double NeuralNet::loss(const matrix_t &X, const matrix_t &Y, double lambda) {
+F_TYPE NeuralNet::loss(const matrix_t &X, const matrix_t &Y, F_TYPE lambda) {
   assert(layer.front().size == X.cols());
   assert(layer.back().size == Y.cols());
   // number of samples
@@ -92,7 +89,7 @@ double NeuralNet::loss(const matrix_t &X, const matrix_t &Y, double lambda) {
   // compute error
   array_t error = layer.back().a.array() - ((Y.rowwise()-Yshift.transpose()) * Yscale.asDiagonal()).array();
   // compute cost
-  double J = 0.5*error.square().sum()/m;
+  F_TYPE J = 0.5*error.square().sum()/m;
   // compute delta  
   layer.back().delta = (error * sigmoid_gradient(layer.back().a).array()).matrix();
   for (size_t i=layer.size()-2; i>0; --i) {
@@ -117,7 +114,7 @@ void NeuralNet::rprop() {
   for (int i=1; i<layer.size(); ++i) {
     for (int j=0; j<layer[i].size; ++j) {
       for (int k=0; k<layer[i-1].size; ++k) {
-        double u = rprop_update(layer[i].directionW(j,k), layer[i].DeltaW(j,k), layer[i].dEdW(j,k));
+        F_TYPE u = rprop_update(layer[i].directionW(j,k), layer[i].DeltaW(j,k), layer[i].dEdW(j,k));
         layer[i].W(j,k) += u;
       }
       layer[i].b(j) += rprop_update(layer[i].directionb(j), layer[i].Deltab(j), layer[i].dEdb(j));
@@ -125,7 +122,7 @@ void NeuralNet::rprop() {
   }
 }
 
-double NeuralNet::rprop_update(double &direction, double &Delta, double grad) {
+F_TYPE NeuralNet::rprop_update(F_TYPE &direction, F_TYPE &Delta, F_TYPE grad) {
   if (direction > 0) {
     Delta = std::min(Delta * p.eta_plus, p.Delta_max);
     direction = grad;
@@ -177,7 +174,7 @@ matrix_t NeuralNet::sigmoid_gradient(const matrix_t &x) {
   return x.cwiseProduct((1.0-x.array()).matrix());
 }
 
-void NeuralNet::gradient_descent(double alpha) {
+void NeuralNet::gradient_descent(F_TYPE alpha) {
   for (int i=1; i<layer.size(); ++i) {
     layer[i].W -= alpha*layer[i].dEdW;
     layer[i].b -= alpha*layer[i].dEdb;
@@ -185,14 +182,28 @@ void NeuralNet::gradient_descent(double alpha) {
 }
 
 bool NeuralNet::write(const char *filename) {
-  std::ofstream fs;
-  fs.open(filename);
-  if (fs.is_open()) {
-    fs << layer.size() << std::endl;
-    for (int i=0; i<layer.size(); ++i) fs << layer[i].size << std::endl;
-    fs << Xscale.transpose() << std::endl << Xshift.transpose() << std::endl;
-    fs << Yscale.transpose() << std::endl << Yshift.transpose() << std::endl;
-    for (int i=1; i<layer.size(); ++i) fs << layer[i].W << std::endl << layer[i].b << std::endl;
+  // open file
+  std::ofstream fs(filename, std::ios::out | std::ios::binary);
+  // write everything to disk
+  if (fs) {
+    // number of layers
+    int num_layers = layer.size();
+    fs.write((char *)&num_layers, sizeof(int));
+    // topology
+    for (int i=0; i<layer.size(); ++i) {
+      int num_units = layer[i].size;
+      fs.write((char *) &num_units, sizeof(int));
+    }
+    // scaling parameters
+    fs.write((char *) Xscale.data(), Xscale.size() * sizeof(F_TYPE));
+    fs.write((char *) Xshift.data(), Xshift.size() * sizeof(F_TYPE));
+    fs.write((char *) Yscale.data(), Yscale.size() * sizeof(F_TYPE));
+    fs.write((char *) Yshift.data(), Yshift.size() * sizeof(F_TYPE));
+    // weights
+    for (int i=1; i<layer.size(); ++i) {
+      fs.write((char *) layer[i].W.data(), layer[i].W.rows() * layer[i].W.cols() * sizeof(F_TYPE));
+      fs.write((char *) layer[i].b.data(), layer[i].b.size() * sizeof(F_TYPE));
+    }
   }
   fs.close();
   return true;

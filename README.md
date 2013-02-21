@@ -84,10 +84,7 @@ TODO
 
 ### Changing the floating number precision
 
-nn uses double precision floats by default. You can change this behaviour in the file `nn_utils.h`.
+nn uses double precision floats by default. You can change this behaviour in the file `nn.h`.
 
-          typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix_t;
-          typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vector_t;
-          typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> array_t;
-
+          #define F_TYPE double
 

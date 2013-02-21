@@ -8,12 +8,14 @@
 #ifndef __NN_H__
 #define __NN_H__
 
+#define F_TYPE double
+
 #include <Eigen/Core>
 #include <vector>
 
-typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix_t;
-typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vector_t;
-typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> array_t;
+typedef Eigen::Matrix<F_TYPE, Eigen::Dynamic, Eigen::Dynamic> matrix_t;
+typedef Eigen::Matrix<F_TYPE, Eigen::Dynamic, 1> vector_t;
+typedef Eigen::Array<F_TYPE, Eigen::Dynamic, Eigen::Dynamic> array_t;
 
 struct Layer {
   size_t size;
@@ -23,7 +25,7 @@ struct Layer {
 };
 
 struct RpropParams {
-  double Delta_0, Delta_max, Delta_min, eta_minus, eta_plus;
+  F_TYPE Delta_0, Delta_max, Delta_min, eta_minus, eta_plus;
 };
 
 class NeuralNet {
@@ -35,11 +37,11 @@ public:
   /** Destructor. */
   ~NeuralNet();
   /** Initial weights randomly in range. */
-  void init_weights(double range);
+  void init_weights(F_TYPE range);
   /** Compute the loss function and its gradient. 
    *  Rows of X are instances, columns are features. 
    *  Lambda is a regularization parameter penalizing large weights. */
-  double loss(const matrix_t &X, const matrix_t &Y, double lambda);
+  F_TYPE loss(const matrix_t &X, const matrix_t &Y, F_TYPE lambda);
   /** Propagate data through the net.
    *  Rows of X are instances, columns are features. */
   void forward_pass(const matrix_t &X);
@@ -49,7 +51,7 @@ public:
   void rprop();
   void rprop_reset();
   /** Perform one iteration of gradient descent using learning rate alpha. */
-  void gradient_descent(double alpha);
+  void gradient_descent(F_TYPE alpha);
   /** Write net parameter to file. */
   bool write(const char * filename);
   /** Returns the logistic function values f(x) given x. */
@@ -65,7 +67,7 @@ protected:
   /** Allocate memory and initialize default values. */
   void init_layer(Eigen::VectorXi &topology);
   /** Return delta w for given arguments. */ 
-  double rprop_update(double &direction, double &Delta, double grad);
+  F_TYPE rprop_update(F_TYPE &direction, F_TYPE &Delta, F_TYPE grad);
   /** Default parameters for RPROP. */ 
   static const RpropParams p;
   /** Scaling parameters. */

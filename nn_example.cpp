@@ -22,7 +22,7 @@ int main (int argc, const char* argv[]) {
   // number of layers
   int k = 3;
   // number of optimization steps
-  int max_steps = 50;
+  int max_steps = 33;
   // regularization parameter
   int lambda = 0.01;
 
@@ -38,7 +38,7 @@ int main (int argc, const char* argv[]) {
 
   // specify network topology
   Eigen::VectorXi topo(k);
-  topo << n_input, 5, n_output;
+  topo << n_input, 6, n_output;
   std::cout << "topology: " << std::endl << topo << std::endl;
 
   // initialize a neural network with given topology
