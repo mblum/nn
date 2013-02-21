@@ -6,10 +6,12 @@ nn is a lightweight neural network library using resilient propagation for adapt
 Installation
 ------------
 
-nn was tested on Ubuntu Linux, Arch Linux and MacOS
+nn was tested on Ubuntu, Arch Linux and MacOS
 
-* install [CMake](http://http://www.cmake.org/)
-* download [Eigen3](http://eigen.tuxfamily.org/) and put it somewhere cmake can find it
+* install [CMake](http://http://www.cmake.org/), [Eigen3](http://eigen.tuxfamily.org/) and [subversion](http://subversion.tigris.org/). On Ubuntu this is done as follows:
+
+          sudo apt-get install cmake subversion libeigen3-dev
+
 * clone the nn repository or download it [here](https://bitbucket.org/mblum/nn/get/master.tar.gz)
 * change to the nn directory and create a build folder 
   
