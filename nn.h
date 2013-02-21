@@ -5,8 +5,8 @@
 //  Copyright (c) 2012 Uni Freiburg. All rights reserved.
 //
 
-#ifndef xperitor_nn_h
-#define xperitor_nn_h
+#ifndef __NN_H__
+#define __NN_H__
 
 #include <Eigen/Core>
 #include <vector>
@@ -22,7 +22,7 @@ struct Layer {
   vector_t b, dEdb, Deltab, directionb;
 };
 
-struct rprop_params {
+struct RpropParams {
   double Delta_0, Delta_max, Delta_min, eta_minus, eta_plus;
 };
 
@@ -43,6 +43,8 @@ public:
   /** Propagate data through the net.
    *  Rows of X are instances, columns are features. */
   void forward_pass(const matrix_t &X);
+  /** Return activation of output layer. */
+  matrix_t get_activation();
   /** Perform one iteration of RPROP using the default parameters. */
   void rprop();
   void rprop_reset();
@@ -51,18 +53,26 @@ public:
   /** Write net parameter to file. */
   bool write(const char * filename);
   /** Returns the logistic function values f(x) given x. */
-  static matrix_t sigmoid(matrix_t &x);
+  static matrix_t sigmoid(const matrix_t &x);
   /** Returns the gradient f'(x) of the logistic function given f(x). */
-  static matrix_t sigmoid_gradient(matrix_t &x);
+  static matrix_t sigmoid_gradient(const matrix_t &x);
   /** Holds the layers of the neural net. */
   std::vector<Layer> layer;
+  /** Compute autoscale parameters. */
+  void autoscale(const matrix_t &X, const matrix_t &Y);
+  void autoscale_reset();  
 protected:
   /** Allocate memory and initialize default values. */
   void init_layer(Eigen::VectorXi &topology);
   /** Return delta w for given arguments. */ 
   double rprop_update(double &direction, double &Delta, double grad);
   /** Default parameters for RPROP. */ 
-  static const rprop_params p;
+  static const RpropParams p;
+  /** Scaling parameters. */
+  vector_t Xshift;
+  vector_t Xscale;
+  vector_t Yshift;
+  vector_t Yscale;
 };
 
 #endif

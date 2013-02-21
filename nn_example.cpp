@@ -43,6 +43,8 @@ int main (int argc, const char* argv[]) {
 
   // initialize a neural network with given topology
   NeuralNet nn(topo);
+
+  nn.autoscale(X,Y);
   
   // train the network
   std::cout << "starting training" << std::endl;
@@ -61,7 +63,7 @@ int main (int argc, const char* argv[]) {
 
   // testing 
   nn2.forward_pass(X);
-  matrix_t Y_test = nn2.layer.back().a;
+  matrix_t Y_test = nn2.get_activation();
 
   std::cout << "test input:" << std::endl << X << std::endl;
   std::cout << "test output:" << std::endl << Y_test << std::endl;

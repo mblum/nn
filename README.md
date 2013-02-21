@@ -6,7 +6,7 @@ nn is a lightweight neural network library using resilient propagation for train
 Installation
 ------------
 
-nn was tested on Ubuntu Linux and MacOS
+nn was tested on Ubuntu Linux, Arch Linux and MacOS
 
 * install [CMake](http://http://www.cmake.org/)
 * download [Eigen3](http://eigen.tuxfamily.org/) and put it somewhere cmake can find it
@@ -66,7 +66,7 @@ Alternate between computing the quadratic loss of the neural network model and a
 If you trained a model using training data, you normally want to use this model for making predictions on new data. With neural networks you would use the forward pass for this. Afterwards the network output can be read from the activation of the output layer. 
 
           nn.forward_pass(X_test);
-          matrix_t Y_test = nn.layer.back().a;
+          matrix_t Y_test = nn.get_activation();
 
 ### Reading and writing models to disk
 
@@ -80,5 +80,14 @@ You can read and write neural network models to textfiles.
 
 ### Scaling the data
 
+TODO
+
 ### Changing the floating number precision
+
+nn uses double precision floats by default. You can change this behaviour in the file `nn_utils.h`.
+
+          typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> matrix_t;
+          typedef Eigen::Matrix<double, Eigen::Dynamic, 1> vector_t;
+          typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> array_t;
+
 

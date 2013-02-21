@@ -7,13 +7,18 @@
 
 #include <iostream>
 #include <fstream>
+#include <assert.h>
+
 #include "nn.h"
 
-const rprop_params NeuralNet::p = {0.1, 50, 1e-6, 0.5, 1.2};
+
+// default parameters for Rprop
+const RpropParams NeuralNet::p = {0.1, 50, 1e-6, 0.5, 1.2};
 
 NeuralNet::NeuralNet(Eigen::VectorXi &topology) {
   init_layer(topology);
   init_weights(0.5);
+  autoscale_reset();
 }
 
 NeuralNet::NeuralNet(const char *filename) {
@@ -28,6 +33,11 @@ NeuralNet::NeuralNet(const char *filename) {
   Eigen::VectorXi topology(dim);
   for (int i=0; i<dim; ++i) fs >> topology(i);
   init_layer(topology);
+  autoscale_reset();
+  for (int i=0; i<layer.front().size; ++i) fs >> Xscale(i);
+  for (int i=0; i<layer.front().size; ++i) fs >> Xshift(i);
+  for (int i=0; i<layer.back().size; ++i) fs >> Yscale(i);
+  for (int i=0; i<layer.back().size; ++i) fs >> Yshift(i);
   for (int i=1; i<topology.size(); ++i) {
     for (int j=0; j<layer[i].size; ++j) {
       for (int k=0; k<layer[i-1].size; ++k) {
@@ -73,12 +83,14 @@ NeuralNet::~NeuralNet() {
 }
 
 double NeuralNet::loss(const matrix_t &X, const matrix_t &Y, double lambda) {
+  assert(layer.front().size == X.cols());
+  assert(layer.back().size == Y.cols());
   // number of samples
   size_t m = X.rows();
   // forward pass
   forward_pass(X);
   // compute error
-  array_t error = layer.back().a.array() - Y.array();
+  array_t error = layer.back().a.array() - ((Y.rowwise()-Yshift.transpose()) * Yscale.asDiagonal()).array();
   // compute cost
   double J = 0.5*error.square().sum()/m;
   // compute delta  
@@ -140,8 +152,9 @@ void NeuralNet::rprop_reset() {
 }
 
 void NeuralNet::forward_pass(const matrix_t &X) {
-  // copy data matrix
-  layer[0].a = X;
+  assert(layer.front().size == X.cols());
+  // copy and scale data matrix
+  layer[0].a = (X.rowwise()-Xshift.transpose()) * Xscale.asDiagonal();
   for (int i=1; i<layer.size(); ++i) {
     // compute input for current layer
     layer[i].z = layer[i-1].a * layer[i].W.transpose();
@@ -152,11 +165,15 @@ void NeuralNet::forward_pass(const matrix_t &X) {
   }
 }
 
-matrix_t NeuralNet::sigmoid(matrix_t &x) {
+matrix_t NeuralNet::get_activation() {
+  return (layer.back().a * Yscale.asDiagonal().inverse()).rowwise() + Yshift.transpose();
+}
+
+matrix_t NeuralNet::sigmoid(const matrix_t &x) {
   return ((-x).array().exp() + 1.0).inverse().matrix();
 }
 
-matrix_t NeuralNet::sigmoid_gradient(matrix_t &x) {
+matrix_t NeuralNet::sigmoid_gradient(const matrix_t &x) {
   return x.cwiseProduct((1.0-x.array()).matrix());
 }
 
@@ -173,9 +190,30 @@ bool NeuralNet::write(const char *filename) {
   if (fs.is_open()) {
     fs << layer.size() << std::endl;
     for (int i=0; i<layer.size(); ++i) fs << layer[i].size << std::endl;
+    fs << Xscale.transpose() << std::endl << Xshift.transpose() << std::endl;
+    fs << Yscale.transpose() << std::endl << Yshift.transpose() << std::endl;
     for (int i=1; i<layer.size(); ++i) fs << layer[i].W << std::endl << layer[i].b << std::endl;
   }
   fs.close();
   return true;
 }
 
+void NeuralNet::autoscale(const matrix_t &X, const matrix_t &Y) {
+  assert(layer.front().size == X.cols());
+  assert(layer.back().size == Y.cols());
+  // compute the mean of the input data
+  Xshift = X.colwise().mean();
+  // compute the standard deviation of the input data
+  Xscale = (X.rowwise()-Xshift.transpose()).array().square().colwise().mean().array().sqrt().inverse();
+  // compute the minimum target values
+  Yshift = Y.colwise().minCoeff();
+  // compute the maximum shifted target values
+  Yscale = (Y.colwise().maxCoeff() - Yshift).array().inverse();
+}
+
+void NeuralNet::autoscale_reset() {
+  Xscale = vector_t::Ones(layer.front().size);
+  Xshift = vector_t::Zero(layer.front().size);
+  Yscale = vector_t::Ones(layer.back().size);
+  Yshift = vector_t::Zero(layer.back().size);
+}
