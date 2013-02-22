@@ -54,7 +54,7 @@ Organize your training data into a *(m x n_input)* matrix containing the trainin
 
 ### Initializing the neural network
 
-This neural network implementation only supports fully connected feed forward networks. The neurons are organized into *k* layers. There is at least one input layer, one output layer and an arbitrary number of hidden layers. Each neuron has outgoing connections to all neurons in the subsequent layer. The number of neurons in the input and the output layer is given by the dimensionality of the training data. After specifying the network topology you can create the neural network. The weights will be initialized randomly.
+This neural network implementation only supports fully connected feed forward multi-layer perceptrons (MLPs) with sigmoidal activation functions. The neurons are organized into *k* layers. There is at least one input layer, one output layer and an arbitrary number of hidden layers. Each neuron has outgoing connections to all neurons in the subsequent layer. The number of neurons in the input and the output layer is given by the dimensionality of the training data. After specifying the network topology you can create the `NeuralNet` object. The weights will be initialized randomly.
 
           Eigen::VectorXi topo(k);
           topo << n_input, n1, n2, ..., n_output;
@@ -64,13 +64,13 @@ This neural network implementation only supports fully connected feed forward ne
 
 ### Scaling the data
 
-When working with neural networks you should always scale your data, such that all the features are in the same range and the output values are between 0 and 1. You can do this by passing your training data to the autoscale function, which computes the optimal mapping. After calling autoscale this mapping will be performed automatically, so you only have to do this once. 
+When working with MLPs you should always scale your data, such that all the features are in the same range and the output values are between 0 and 1. You can do this by passing your training data to the `autoscale` function, which computes the optimal mapping. After calling `autoscale` this mapping will be performed automatically, so you only have to do this once. To reset the scaling parameters to standard values call `autoscale_reset`. 
 
           nn.autoscale(X,Y);
 
 ### Training the network
 
-Alternate between computing the quadratic loss of the neural network model and adapting the parameters until the loss converges. You can also specify a regularization parameter *lambda*, which punishes large weights and thereby avoids overfitting.
+Alternate between computing the quadratic loss of the MLP and adapting the parameters until the loss converges. You can also specify a regularization parameter *lambda*, which punishes large weights and thereby avoids overfitting.
 
           for (int i = 0; i < max_steps; ++i) {
             err = nn.loss(X, Y, lambda);
@@ -86,7 +86,7 @@ If you trained a model, you can make predictions on new data by passing it throu
 
 ### Reading and writing models to disk
 
-You can read and write neural network models to binary files.
+You can read and write MLPs to binary files.
 
           // write model to disk
           nn.write(filename);

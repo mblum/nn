@@ -48,7 +48,7 @@ int main (int argc, const char* argv[]) {
   for (int i = 0; i < max_steps; ++i) {
     err = nn.loss(X, Y, lambda);
     nn.rprop();
-    printf("%3i   %4.4f\n", i, err*err);
+    printf("%3i   %4.4f\n", i, err);
   }
 
   // write model to disk

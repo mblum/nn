@@ -12,6 +12,7 @@
 const RpropParams NeuralNet::p = {0.1, 50, 1e-6, 0.5, 1.2};
 
 NeuralNet::NeuralNet(Eigen::VectorXi &topology) {
+  assert(topology.size()>1);
   init_layer(topology);
   init_weights(0.5);
   autoscale_reset();
@@ -78,16 +79,17 @@ NeuralNet::~NeuralNet() {
 F_TYPE NeuralNet::loss(const matrix_t &X, const matrix_t &Y, F_TYPE lambda) {
   assert(layer.front().size == X.cols());
   assert(layer.back().size == Y.cols());
+  assert(X.rows() == Y.rows());
   // number of samples
   size_t m = X.rows();
   // forward pass
   forward_pass(X);
   // compute error
-  array_t error = layer.back().a.array() - ((Y.rowwise()-Yshift.transpose()) * Yscale.asDiagonal()).array();
+  matrix_t error = layer.back().a - ((Y.rowwise()-Yshift.transpose()) * Yscale.asDiagonal());
   // compute cost
-  F_TYPE J = 0.5*error.square().sum()/m;
+  F_TYPE J = 0.5*error.rowwise().squaredNorm().mean();
   // compute delta  
-  layer.back().delta = (error * sigmoid_gradient(layer.back().a).array()).matrix();
+  layer.back().delta = (error.array() * sigmoid_gradient(layer.back().a).array()).matrix();
   for (size_t i=layer.size()-2; i>0; --i) {
     matrix_t g = sigmoid_gradient(layer[i].a);
     layer[i].delta = (layer[i+1].delta * layer[i+1].W).cwiseProduct(g);
@@ -210,6 +212,7 @@ bool NeuralNet::write(const char *filename) {
 void NeuralNet::autoscale(const matrix_t &X, const matrix_t &Y) {
   assert(layer.front().size == X.cols());
   assert(layer.back().size == Y.cols());
+  assert(X.rows() == Y.rows());
   // compute the mean of the input data
   Xshift = X.colwise().mean();
   // compute the standard deviation of the input data
@@ -218,7 +221,7 @@ void NeuralNet::autoscale(const matrix_t &X, const matrix_t &Y) {
   // compute the minimum target values
   Yshift = Y.colwise().minCoeff();
   // compute the maximum shifted target values
-  Yscale = (Y.colwise().maxCoeff() - Yshift).array().inverse();
+  Yscale = (Y.colwise().maxCoeff() - Yshift.transpose()).array().inverse();
   for (size_t i=0; i<Yscale.size(); ++i) if (Yscale(i) > 10e9) Yscale(i) = 1;
 }
 

@@ -33,3 +33,5 @@ TARGET_LINK_LIBRARIES(nn_test nn gtest gtest_main pthread)
 ADD_EXECUTABLE(nn_example nn_example.cpp)
 TARGET_LINK_LIBRARIES(nn_example nn)
 
+ADD_EXECUTABLE(mnist mnist.cpp)
+TARGET_LINK_LIBRARIES(mnist nn)

@@ -133,7 +133,7 @@ TEST(nn, testfunction) {
     err = nn.loss(X, Y, lambda);
     nn.rprop();
   }
-  ASSERT_LE(err, 0.001);
+  ASSERT_LE(err, 0.01);
   nn.write("/tmp/nn.txt");
   NeuralNet nnclone("/tmp/nn.txt");
   ASSERT_NEAR(nn.loss(X, Y, lambda), nnclone.loss(X, Y, lambda), 1e-12);
