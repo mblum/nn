@@ -91,7 +91,7 @@ int main (int argc, const char* argv[]) {
   matrix_t Y_test = read_mnist_labels(path + "/t10k-labels-idx1-ubyte");
 
   // number of optimization steps
-  int max_steps = 300;
+  int max_steps = 200;
   // regularization parameter
   int lambda = 0.0001;
 

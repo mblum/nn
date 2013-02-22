@@ -100,3 +100,10 @@ nn uses double precision floats by default. You can change this behaviour in the
 
           #define F_TYPE double
 
+### MNIST dataset
+
+If you would like to test nn on the MNIST dataset, download the dataset from [here](http://yann.lecun.com/exdb/mnist/) and run the `mnist` tool. 
+
+          ./mnist path/to/data
+
+Training may take some time. Have fun!
