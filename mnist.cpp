@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
+#include <string>
 
 #include "nn.h"
 
@@ -13,10 +14,10 @@ inline void swap(int &val)
 	val = (val<<24) | ((val<<8) & 0x00ff0000) | ((val>>8) & 0x0000ff00) | (val>>24);
 }
 
-matrix_t read_mnist_images(const char* filename)
+matrix_t read_mnist_images(std::string filename)
 {
   matrix_t X;
-  std::ifstream fs(filename, std::ios::binary);
+  std::ifstream fs(filename.c_str(), std::ios::binary);
   if(fs) {
     int magic_number, num_images, num_rows, num_columns;
     fs.read((char*)&magic_number, sizeof(magic_number));
@@ -44,10 +45,10 @@ matrix_t read_mnist_images(const char* filename)
   return X;
 }
 
-matrix_t read_mnist_labels(const char* filename)
+matrix_t read_mnist_labels(std::string  filename)
 {
   matrix_t Y;
-  std::ifstream fs(filename, std::ios::binary);
+  std::ifstream fs(filename.c_str(), std::ios::binary);
   if(fs) {
     int magic_number, num_images, num_rows, num_columns;
     fs.read((char*)&magic_number, sizeof(magic_number));
@@ -75,22 +76,24 @@ int main (int argc, const char* argv[]) {
   if (argc != 2) {
     std::cout << "please provide path to mnist data ..." << std::endl;
     std::cout << "you can download the dataset at http://yann.lecun.com/exdb/mnist/" << std::endl;
-    std::cout << std::endl << "usage: " << argv[1] << " path_to_data" << std::endl;
+    std::cout << std::endl << "usage: " << argv[0] << " path_to_data" << std::endl << std::endl;
     return 1;
   }
 
-  std::cout << "reading data ..." << std::endl;
+  std::string path = argv[1];
 
-  matrix_t X_train = read_mnist_images("../train-images-idx3-ubyte");
-  matrix_t Y_train = read_mnist_labels("../train-labels-idx1-ubyte");
+  std::cout << "reading data from " << path << std::endl;
 
-  matrix_t X_test = read_mnist_images("../t10k-images-idx3-ubyte");
-  matrix_t Y_test = read_mnist_labels("../t10k-labels-idx1-ubyte");
+  matrix_t X_train = read_mnist_images(path + "/train-images-idx3-ubyte");
+  matrix_t Y_train = read_mnist_labels(path + "/train-labels-idx1-ubyte");
+
+  matrix_t X_test = read_mnist_images(path + "/t10k-images-idx3-ubyte");
+  matrix_t Y_test = read_mnist_labels(path + "/t10k-labels-idx1-ubyte");
 
   // number of optimization steps
   int max_steps = 300;
   // regularization parameter
-  int lambda = 0.01;
+  int lambda = 0.0001;
 
   // specify network topology
   Eigen::VectorXi topo(4);
