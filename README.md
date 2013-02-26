@@ -1,19 +1,19 @@
 Multi-layer perceptrons using RPROP
 ===================================
 
-nn is a lightweight neural network library using resilient propagation for adapting the weights
+**nn** is a lightweight neural network library using resilient propagation for adapting the weights
 
 Installation
 ------------
 
-nn was tested on Ubuntu, Arch Linux and MacOS
+**nn** was tested on Ubuntu, Arch Linux and MacOS
 
 * install [CMake](http://http://www.cmake.org/), [Eigen3](http://eigen.tuxfamily.org/) and [subversion](http://subversion.tigris.org/). On Ubuntu this is done as follows:
 
           sudo apt-get install cmake subversion libeigen3-dev
 
-* clone the nn repository or download it [here](https://bitbucket.org/mblum/nn/get/master.tar.gz)
-* change to the nn directory and create a build folder 
+* clone the **nn** repository or download it [here](https://bitbucket.org/mblum/nn/get/master.tar.gz)
+* change to the **nn** directory and create a build folder 
   
           cd path/to/nn
           mkdir build
@@ -26,22 +26,24 @@ nn was tested on Ubuntu, Arch Linux and MacOS
 
 * run the example code
 
-          ./nn_example
+          ./tutorial
 
-* if cmake was able to download [googletest](http://code.google.com/p/googletest/) you can run unit tests now
-    
-          ./nn_test
+* to compile unit tests for **nn**, run cmake with the option `-DWITH_GTEST=ON`
+
+          cmake .. -DWITH_GTEST=ON
+          make
+          ./nntest
 
 
 License
 -------
 
-nn is free software, licensed under the BSD license. A copy of this license is distributed with the software.  
+**nn** is free software, licensed under the BSD license. A copy of this license is distributed with the software.  
 
 Usage of the library
 --------------------
 
-The source code for this tutorial can be found in `nn_example.cpp`.
+The source code for this tutorial can be found in `tutorial.cpp`.
 
 ### Preparing your data
 
@@ -96,14 +98,18 @@ You can read and write MLPs to binary files.
 
 ### Changing the floating number precision
 
-nn uses double precision floats by default. You can change this behaviour in the file `nn.h`.
+**nn** uses double precision floats by default. You can change this behaviour in the file `nn.h`.
 
           #define F_TYPE double
 
 ### MNIST dataset
 
-If you would like to test nn on the MNIST dataset, download the dataset from [here](http://yann.lecun.com/exdb/mnist/) and run the `mnist` tool. 
+In order to test **nn** on the MNIST dataset, download the dataset from [here](http://yann.lecun.com/exdb/mnist/) and run the `mnist` tool. 
 
           ./mnist path/to/data
 
-Training may take some time. Have fun!
+The tool will train a MLP with two hidden layers, containing 300 and 100 neurons respectively connected by 266.610 weights. 
+
+### Using **nn** in your own project
+
+Just copy `nn.h` and `nn.cpp` into your workspace, make sure that the `Eigen` headers are found and start coding!

@@ -82,7 +82,7 @@ int main (int argc, const char* argv[]) {
 
   std::string path = argv[1];
 
-  std::cout << "reading data from " << path << std::endl;
+  std::cout << "reading data" << std::endl;
 
   matrix_t X_train = read_mnist_images(path + "/train-images-idx3-ubyte");
   matrix_t Y_train = read_mnist_labels(path + "/train-labels-idx1-ubyte");
@@ -91,7 +91,7 @@ int main (int argc, const char* argv[]) {
   matrix_t Y_test = read_mnist_labels(path + "/t10k-labels-idx1-ubyte");
 
   // number of optimization steps
-  int max_steps = 200;
+  int max_steps = 300;
   // regularization parameter
   int lambda = 0.0001;
 
@@ -101,10 +101,10 @@ int main (int argc, const char* argv[]) {
   std::cout << "topology: " << topo.transpose() << std::endl;
 
   // initialize a neural network with given topology
-  std::cout << "initializing network ..." << std::endl;
+  std::cout << "initializing network" << std::endl;
   NeuralNet nn(topo);
 
-  std::cout << "scaling the data ..." << std::endl;
+  std::cout << "scaling the data" << std::endl;
   nn.autoscale(X_train, Y_train);
   
   // train the network
@@ -128,6 +128,8 @@ int main (int argc, const char* argv[]) {
   }
 
   std::cout << "test accuracy: " << correct*1.0/Y_test.rows() << std::endl;
+
+  nn.write("mnist.net");
 
   return 0;
 }
