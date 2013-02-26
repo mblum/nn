@@ -41,6 +41,9 @@ matrix_t read_mnist_images(std::string filename)
       }
     }
     fs.close();
+  } else {
+    std::cout << "error reading file: " << filename << std::endl;
+    exit(1);
   }
   return X;
 }
@@ -66,9 +69,11 @@ matrix_t read_mnist_labels(std::string  filename)
       Y(i,(int) temp) = 1.0;        
     }
     fs.close();
+  } else {
+    std::cout << "error reading file: " << filename << std::endl;
+    exit(1);
   }
   return Y;
-
 }
 
 int main (int argc, const char* argv[]) {
@@ -86,7 +91,6 @@ int main (int argc, const char* argv[]) {
 
   matrix_t X_train = read_mnist_images(path + "/train-images-idx3-ubyte");
   matrix_t Y_train = read_mnist_labels(path + "/train-labels-idx1-ubyte");
-
   matrix_t X_test = read_mnist_images(path + "/t10k-images-idx3-ubyte");
   matrix_t Y_test = read_mnist_labels(path + "/t10k-labels-idx1-ubyte");
 
