@@ -108,7 +108,7 @@ In order to test **nn** on the MNIST dataset, download the dataset from [here](h
 
           ./mnist path/to/data
 
-The tool will train a MLP with two hidden layers, containing 300 and 100 neurons respectively connected by 266.610 weights. 
+The tool will train a MLP with two hidden layers, containing 300 and 100 neurons respectively connected by 266.610 weights. Using this setup you can accomplish error rates below 5% on the test dataset.   
 
 ### Using **nn** in your own project
 
