@@ -1,6 +1,9 @@
 // Copyright (c) 2013, Manuel Blum
 // All rights reserved.
 
+// Define this symbol to enable runtime tests for allocations
+//#define EIGEN_RUNTIME_NO_MALLOC 
+
 #include <Eigen/Dense>
 #include <iostream>
 #include <fstream>
@@ -95,13 +98,13 @@ int main (int argc, const char* argv[]) {
   matrix_t Y_test = read_mnist_labels(path + "/t10k-labels-idx1-ubyte");
 
   // number of optimization steps
-  int max_steps = 300;
+  int max_steps = 600;
   // regularization parameter
-  int lambda = 0.0001;
+  int lambda = 0.0;
 
   // specify network topology
-  Eigen::VectorXi topo(4);
-  topo << X_train.cols(), 300, 100, Y_test.cols();
+  Eigen::VectorXi topo(3);
+  topo << X_train.cols(), 300, Y_test.cols();
   std::cout << "topology: " << topo.transpose() << std::endl;
 
   // initialize a neural network with given topology
