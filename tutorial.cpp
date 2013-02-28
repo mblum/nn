@@ -18,9 +18,9 @@ int main (int argc, const char* argv[]) {
   // number of layers
   int k = 3;
   // number of optimization steps
-  int max_steps = 33;
+  int max_steps = 50;
   // regularization parameter
-  int lambda = 0.01;
+  double lambda = 0.000001;
 
   // training inputs
   matrix_t X(m, n_input);
