@@ -31,6 +31,7 @@ IF (${WITH_GTEST})
   # ----- Download and build gtest -----
   ExternalProject_Add(googletest
     SVN_REPOSITORY "http://googletest.googlecode.com/svn/tags/release-1.6.0"
+    UPDATE_COMMAND ""
     INSTALL_COMMAND ""
   )
 
