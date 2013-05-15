@@ -100,7 +100,7 @@ int main (int argc, const char* argv[]) {
   // number of optimization steps
   int max_steps = 600;
   // regularization parameter
-  int lambda = 0.0;
+  double lambda = 0.0;
 
   // specify network topology
   Eigen::VectorXi topo(3);
