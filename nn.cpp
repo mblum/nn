@@ -96,7 +96,7 @@ F_TYPE NeuralNet::loss(const matrix_t &X, const matrix_t &Y, F_TYPE lambda) {
   }
   // compute partial derivatives and RPROP parameters
   for (int i=1; i<layer.size(); ++i) {
-    // add regularization
+    // add regularization to weights, bias weights are not regularized
     J += 0.5 * lambda * layer[i].W.array().square().sum() / m;
     matrix_t dEdW = (layer[i].delta.transpose() * layer[i-1].a + lambda*layer[i].W) / m;
     vector_t dEdb = layer[i].delta.colwise().sum().transpose() / m;

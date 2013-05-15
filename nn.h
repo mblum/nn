@@ -59,6 +59,11 @@ public:
   /** Compute autoscale parameters. */
   void autoscale(const matrix_t &X, const matrix_t &Y);
   void autoscale_reset();  
+  /** Scaling parameters. */
+  vector_t Xshift;
+  vector_t Xscale;
+  vector_t Yshift;
+  vector_t Yscale;
 protected:
   /** Allocate memory and initialize default values. */
   void init_layer(Eigen::VectorXi &topology);
@@ -66,11 +71,6 @@ protected:
   F_TYPE rprop_update(F_TYPE &direction, F_TYPE &Delta, F_TYPE grad);
   /** Default parameters for RPROP. */ 
   static const RpropParams p;
-  /** Scaling parameters. */
-  vector_t Xshift;
-  vector_t Xscale;
-  vector_t Yshift;
-  vector_t Yscale;
 };
 
 #endif
