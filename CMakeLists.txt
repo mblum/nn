@@ -9,6 +9,12 @@ SET(CMAKE_BUILD_TYPE "Release")
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
 SET(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR} CACHE INTERNAL "Prefix prepended to install directories" FORCE)
 
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
+
 FIND_PACKAGE(Eigen3 REQUIRED)
 
 INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
@@ -17,6 +23,9 @@ ADD_LIBRARY(nn nn.cpp)
 
 ADD_EXECUTABLE(tutorial tutorial.cpp)
 TARGET_LINK_LIBRARIES(tutorial nn)
+
+ADD_EXECUTABLE(nppimport nppimport.cpp)
+TARGET_LINK_LIBRARIES(nppimport nn)
 
 ADD_EXECUTABLE(mnist mnist.cpp)
 TARGET_LINK_LIBRARIES(mnist nn)
