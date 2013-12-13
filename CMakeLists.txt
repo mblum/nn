@@ -24,9 +24,6 @@ ADD_LIBRARY(nn nn.cpp)
 ADD_EXECUTABLE(tutorial tutorial.cpp)
 TARGET_LINK_LIBRARIES(tutorial nn)
 
-ADD_EXECUTABLE(nppimport nppimport.cpp)
-TARGET_LINK_LIBRARIES(nppimport nn)
-
 ADD_EXECUTABLE(mnist mnist.cpp)
 TARGET_LINK_LIBRARIES(mnist nn)
 
