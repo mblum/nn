@@ -36,7 +36,7 @@ IF (${WITH_GTEST})
 
   # ----- Download and build gtest -----
   ExternalProject_Add(googletest
-    SVN_REPOSITORY "http://googletest.googlecode.com/svn/tags/release-1.6.0"
+    SVN_REPOSITORY "http://googletest.googlecode.com/svn/tags/release-1.7.0"
     UPDATE_COMMAND ""
     INSTALL_COMMAND ""
   )
@@ -46,5 +46,9 @@ IF (${WITH_GTEST})
 
   ADD_EXECUTABLE(nntest nntest.cpp)
   TARGET_LINK_LIBRARIES(nntest nn gtest gtest_main pthread)
+ELSE()
+    MESSAGE("--")
+    MESSAGE("-- in order to compile unit test set the -DWITH_GTEST=ON flag when running cmake" )
+    MESSAGE("--")
 
 ENDIF()
