@@ -52,10 +52,10 @@ int main (int argc, const char* argv[]) {
   }
 
   // write model to disk
-  nn.write("example.net");
+  nn.write("example.nn");
 
   // read model from disk
-  NeuralNet nn2("example.net");
+  NeuralNet nn2("example.nn");
 
   // testing 
   nn2.forward_pass(X);
