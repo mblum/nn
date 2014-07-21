@@ -136,7 +136,7 @@ int main (int argc, const char* argv[]) {
 
   std::cout << "test accuracy: " << correct*1.0/Y_test.rows() << std::endl;
 
-  nn.write("mnist.net");
+  nn.write("mnist.nn");
 
   return 0;
 }
