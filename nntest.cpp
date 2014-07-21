@@ -120,7 +120,7 @@ TEST(nn, readwrite)
     nn.init_weights(0.5);
     matrix_t X = matrix_t::Random(100,3);
     matrix_t Y = matrix_t::Random(100,2);
-    Y *= 0.5+0.5;
+    Y = Y * 0.4 + 0.5;
     nn.write("testnet.nn");
     NeuralNet nnclone("testnet.nn");
     ASSERT_EQ(topo.size(), nnclone.layer.size());
