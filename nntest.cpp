@@ -71,7 +71,9 @@ TEST(nn, gradient)
     int m = 100;
     matrix_t X = matrix_t::Random(m,3);
     matrix_t Y = matrix_t::Random(m,2);
-    Y *= 0.5+0.5;
+    Y = Y.array() * 0.4 + 0.5;
+    ASSERT_GE(Y.minCoeff(), 0.1);
+    ASSERT_LE(Y.maxCoeff(), 0.9);
     double lambda = 0.01;
     double e = 1e-4;
     ASSERT_EQ(nn.layer[0].size, topo(0));
