@@ -108,7 +108,13 @@ In order to test **nn** on the MNIST dataset, download the dataset from [here](h
 
     ./mnist path/to/data
 
-The tool will train a MLP with two hidden layers, containing 300 and 100 neurons respectively connected by 266.610 weights. Using this setup error rates below 5% are accomplished on the test dataset.   
+The tool will train a MLP with two hidden layers, containing 300 and 100 neurons respectively connected by 266.610 weights. Using this setup error rates below 5% are accomplished on the test dataset.
+
+### Make nn run in parallel ###
+
+Some algorithms of the Eigen library can exploit the multiple cores present in your hardware. This will happen automatically, if your compiler supports it. You can control the number of threads that will be used using by setting the OpenMP OMP_NUM_THREADS environment variable.
+
+    OMP_NUM_THREADS=n ./my_program
 
 ### Using **nn** in your own project
 
