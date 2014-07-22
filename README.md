@@ -32,13 +32,13 @@ Installation
 
         cmake .. -DWITH_GTEST=ON
         make
-        ./nntest
+        make test
 
 
 License
 -------
 
-**nn** is free software, licensed under the BSD license. A copy of this license is distributed with the software.  
+**nn** is free software, licensed under the BSD license. A copy of this license is distributed with the software.
 
 Usage of the library
 --------------------

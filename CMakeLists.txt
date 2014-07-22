@@ -52,6 +52,8 @@ OPTION(WITH_GTEST "Download and compile unit tests using googletest. " OFF)
 
 IF (${WITH_GTEST})
 
+    ENABLE_TESTING()
+
     INCLUDE(ExternalProject)
 
     # ----- Download and build gtest -----
@@ -68,6 +70,7 @@ IF (${WITH_GTEST})
     TARGET_LINK_LIBRARIES(nntest nn gtest gtest_main pthread)
 
     MESSAGE("${BoldGreen}Compiling tests using googletest.${ColourReset}" )
+    ADD_TEST( nntest nntest )
 
 ELSE()
 
